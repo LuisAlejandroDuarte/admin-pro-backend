@@ -13,23 +13,24 @@ const app=express();
 
 app.use(cors());
 
+//lectura y parseo del body
+
+app.use(express.json());
+
 //Base de datos
 
 dbConnection();
 
+app.use('/api/usuarios', require('./routes/usuarios'));
+app.use('/api/login', require('./routes/auth'));
 
 //Rutas
 //mean_user
 //Lu1sAlej0
 
-app.get('/',(req,res)=>{
-res.status(400).json({
 
-    Ok:true,
-    msg:'Hola mundo'
-})
 
-});
+// });
 
 
 app.listen(process.env.PORT,()=> {
