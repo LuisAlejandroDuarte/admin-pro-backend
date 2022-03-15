@@ -4,7 +4,7 @@ const validarJWT = (req,res,next) =>{
 
     //Leer Token
     const token = req.header('x-token');
-    console.log(token);
+   
 
     if (!token)
     {
@@ -26,7 +26,7 @@ const validarJWT = (req,res,next) =>{
     } catch (error) {
         return res.status(401).json({
             ok:false,
-            msg:'Token incorrecto'
+            msg:'Error al crear el Token'
         });
     }
 
