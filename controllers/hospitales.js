@@ -45,25 +45,82 @@ const crearHospitale =async (req,res=response) =>{
 
 };
 
-const actualizarHospital = (req,res=response) =>{
+const actualizarHospital =async (req,res=response) =>{
+
+    const id= req.params.id;
+    const uid= req.uid;
+
+    try {
+
+        const hospitalBD = await Hospital.findById(id);
+        if (hospitalBD){
+
+            const caambiosHospital = {
+                ...req.body,
+                usuario:uid
+            }
+
+            const hospitalActualizado = await Hospital.findByIdAndUpdate(id,caambiosHospital,{new:true});
+            res.json({
+                ok:false,
+                hospitalActualizado
+            });
+
+        } else {
+            return resp.status(404).json({
+                ok:false,
+                msg:"El hospital no existe"
+            })
+        }
 
 
-    res.json({
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok:false,
+            msg:"Error inesperado"
+        })
+    }
 
-        ok:true,
-        msg:'actualizarHospital'
+    const medico = new Hospital({            
+        ...req.body
     });
+
+
 
 };
 
-const borrarHospitale = (req,res=response) =>{
+const borrarHospitales =async (req,res=response) =>{
+
+    const id= req.params.id;
+
+    
+    try {
+
+        const hospitalBD = await Hospital.findById(id);
+        if (!hospitalBD) {
+            return res.status(401).json({
+                ok:false,
+                msg:'No se encontro el hospital con ese Id'
+            });
+        }
+
+        await Hospital.findByIdAndDelete(id);
+
+        res.status(200).json({
+            ok:true,
+            msg:'Hospital eliminado'            
+        });
 
 
-    res.json({
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok:false,
+            msg:'Error inesperado'
+        });
 
-        ok:true,
-        msg:'borrarHospitale'
-    });
+    }
 
 };
 
@@ -72,5 +129,5 @@ module.exports = {
     getHospitales,
     crearHospitale,
     actualizarHospital,
-    borrarHospitale
+    borrarHospitales
 }
